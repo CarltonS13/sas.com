@@ -18,44 +18,59 @@
 ;;;
 
 
-;;; Procedure:
+;;; Procedure
 ;;;   filter-duplicates
 ;;; Parameters:
-;;;   parameters
+;;;   lis, a list 
 ;;; Purpose:
-;;;   purpose
+;;;   to remove lists from a list of list that have all of the same
+;;;   elements in the same order 
 ;;; Produces:
-;;;   product
+;;;   newlis, a list
 ;;; Preconditions:
-;;;  
-;;;   
+;;;   [No additonal]   
 ;;; Postconditions:
-;;;   
-;;;   
-;;;
+;;;   - newlis will only contain elements of lis 
+;;;   - no two elements of newlis should contain the same
+;;; values in the same order
 
 
 ;;; Procedure:
 ;;;   clean-data 
 ;;; Parameters:
-;;;   lst, a list 
+;;;   lis, a list in 
 ;;; Purpose:
-;;;   Remove the fields that we don’t want to include
+;;;   Remove the fields that we don’t want to include from the data
+;;;   fields such as key, duration, danceability  
 ;;; Produces:
-;;;   product
+;;;   newlis, a list
 ;;; Preconditions:
-;;;  
-;;;   
+;;;   [No additonal]   
 ;;; Postconditions:
 ;;;   
 ;;;   
 ;;;
 
+;;; Procedure:
+;;;   remove-danceability
+;;; Parameters:
+;;;   lis, a list in 
+;;; Purpose:
+;;;   Remove the danceability fild from all data in the given list 
+;;; Produces:
+;;;   newlis, a list
+;;; Preconditions:
+;;;   [No additonal]   
+;;; Postconditions:
+;;;   
+;;;   
+;;;
 
 ;;; Procedure:
 ;;;   split-data
 ;;; Parameters:
-;;;   parameters
+;;;   list
+;;;   limit
 ;;; Purpose:
 ;;;   purpose
 ;;; Produces:
