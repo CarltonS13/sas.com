@@ -138,6 +138,29 @@
   (lambda (lst1 lst2)
     (string-ci>=? (list->string2 lst1) (list->string2 lst2))))
 
+(define reformat-data
+  (lambda (lst)
+    (let kernel ([remaining lst]
+                 [data-so-far '()])
+      (cond [(null? remaining)
+             data-so-far]
+            [else
+             (let ([cur (list->vector (car remaining))])
+               (kernel
+                (cdr remaining)
+                (cons (cons (vector-ref cur 2)
+                            (cons (vector-ref cur 1)
+                                  (cons (vector-ref cur 4)
+                                        (cons (vector-ref cur 5)
+                                              (cons (vector-ref cur 7)
+                                                    (cons (vector-ref cur 8)
+                                                          (cons (vector-ref cur 10)
+                                                                (cons (vector-ref cur 11)
+                                                                      (cons (vector-ref cur 12)
+                                                                            (cons (vector-ref cur 13)
+                                                                                  (cons (vector-ref cur 15)  '())))))))))))
+                      data-so-far)))]))))
+
 (define filter-duplicates-carl
   (lambda (lis)
     (null)))
