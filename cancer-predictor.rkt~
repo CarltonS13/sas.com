@@ -153,9 +153,7 @@
 ; finds and sets optimum weight for a given limit 
 (define optimum-weight-finder
   (lambda (limit)
-    (map (section vector-set! weights <> <>)
-         (iota 9)
-         (map (section optimum-weight <> limit) (iota 9)))
+    (map (section vector-set! weights <> <>) (iota 9)(map (section optimum-weight <> limit) (iota 9)))
     (check-all-fails limit)))
 
 
