@@ -1,5 +1,21 @@
 #lang racket
 (require csc151)
+(define split-data
+  (lambda (lst)
+    (let kernel ([remaining lst]
+                 [practice null]
+                 [test null])
+      (let ([rand (random 3)])
+        (cond [(null? remaining)
+               (cons practice test)]
+              [(< rand 2)
+               (kernel (cdr remaining)
+                       (cons (car remaining) practice)
+                       test)]
+              [else
+               (kernel (cdr remaining)
+                       practice
+                       (cons (car remaining) test))])))))
 ;;;Procedure 
 ;;;   rand-string
 ;;;Parameters 
@@ -119,11 +135,13 @@
     (apply string-append lst)))
 (define list->string3
   (lambda (lst)
-    (let kernel ([remaining lst]
+    (let kernel ([remaining (cdr lst)]
                  [so-far ""])
       (if (null? remaining)
           so-far
-          (kernel (cdr remaining) (string-append so-far " § " (car remaining)))))))
+          (if (string? (car remaining))
+              (kernel (cdr remaining) (string-append so-far " § " (car remaining)))
+              (kernel (cdr remaining) (string-append so-far " § " (number->string (car remaining)))))))))
 
 ;;;Procedure 
 ;;;   list-equal?
@@ -136,7 +154,7 @@
 ;;;   result, a boolean value
 (define list-equal?
   (lambda (lst1 lst2)
-    (string-ci>=? (list->string2 lst1) (list->string2 lst2))))
+    (string-ci>=? (list->string3 lst1) (list->string3 lst2))))
 
 (define reformat-data
   (lambda (lst)
@@ -148,19 +166,63 @@
              (let ([cur (list->vector (car remaining))])
                (kernel
                 (cdr remaining)
-                (cons (cons (vector-ref cur 2)
-                            (cons (vector-ref cur 1)
-                                  (cons (vector-ref cur 4)
-                                        (cons (vector-ref cur 5)
-                                              (cons (vector-ref cur 7)
-                                                    (cons (vector-ref cur 8)
-                                                          (cons (vector-ref cur 10)
-                                                                (cons (vector-ref cur 11)
-                                                                      (cons (vector-ref cur 12)
-                                                                            (cons (vector-ref cur 13)
-                                                                                  (cons (vector-ref cur 15)  '())))))))))))
+                (cons (cons (vector-ref cur 0)
+                            (cons (vector-ref cur 2)
+                                  (cons (vector-ref cur 1)
+                                        (cons (vector-ref cur 4)
+                                              (cons (vector-ref cur 5)
+                                                    (cons (vector-ref cur 7)
+                                                          (cons (/ (vector-ref cur 8)  -60)
+                                                                (cons (vector-ref cur 10)
+                                                                      (cons (/(vector-ref cur 11) 200)
+                                                                            (cons (vector-ref cur 13)  '()))))))))))
+                      data-so-far)))]))))
+(define reformat-data-to-id--dance-name
+  (lambda (lst)
+    (let kernel ([remaining lst]
+                 [data-so-far '()])
+      (cond [(null? remaining)
+             data-so-far]
+            [else
+             (let ([cur (list->vector (car remaining))])
+               (kernel
+                (cdr remaining)
+                (cons (cons (vector-ref cur 0)
+                            (cons (vector-ref cur 2)
+                                  (cons (vector-ref cur 15) '())))
                       data-so-far)))]))))
 
-(define filter-duplicates-carl
-  (lambda (lis)
-    (null)))
+(define dump-data
+  (lambda (filename list-of-data)
+    (cond [(not (file-exists? filename))
+           (let ([out (open-output-file filename)])
+             (let kernel ([data list-of-data])
+               (cond [(null? data)
+                      (close-output-port out)]
+                     [else
+                      (let inner-kernel ([remaining (car data)])
+                        (cond [(null? (cdr remaining))
+                               (display (car remaining) out)
+                               (newline out)]
+                              [else
+                               (display (car remaining) out)
+                               (display "," out)
+                               (inner-kernel (cdr remaining))]))
+                      (kernel (cdr data))])))]
+          [else
+           (delete-file filename)
+           (dump-data filename list-of-data)])))
+
+;(dump-data "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates.csv"
+;           (filter-duplicates (cdr (read-csv-file "C:/Users/Moriz/Documents/GitHub/sas.com/2000data.csv"))))
+;(dump-data "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates-reformated-to-id-dance-name.csv"
+;           (reformat-data-to-id--dance-name (read-csv-file "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates.csv")))
+;(dump-data "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates-reformated.csv"
+;           (reformat-data (read-csv-file "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates.csv")))
+
+;(define split (split-data (read-csv-file "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates-reformated.csv")))
+
+;(dump-data "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates-reformated-practice.csv"
+;           (car split))
+;(dump-data "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates-reformated-test.csv"
+;           (cdr split))
