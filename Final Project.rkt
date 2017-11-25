@@ -4,106 +4,6 @@
 (require rackunit/text-ui)
 
 
-;;; Procedure:
-;;;   procedure-name
-;;; Parameters:
-;;;   parameters
-;;; Purpose:
-;;;   purpose
-;;; Produces:
-;;;   product
-;;; Preconditions:
-;;;  
-;;;   
-;;; Postconditions:
-;;;   
-;;;   
-;;;
-
-
-;;; Procedure
-;;;   filter-duplicates
-;;; Parameters:
-;;;   lis, a list 
-;;; Purpose:
-;;;   to remove lists from a list of list that have all of the same
-;;;   elements in the same order 
-;;; Produces:
-;;;   newlis, a list
-;;; Preconditions:
-;;;   [No additonal]   
-;;; Postconditions:
-;;;   - newlis will only contain elements of lis 
-;;;   - no two elements of newlis should contain the same
-;;; values in the same order
-
-
-;;; Procedure:
-;;;   clean-data 
-;;; Parameters:
-;;;   lis, a list in 
-;;; Purpose:
-;;;   Remove the fields that we don’t want to include from the data
-;;;   fields such as key, duration, danceability  
-;;; Produces:
-;;;   newlis, a list
-;;; Preconditions:
-;;;   [No additonal]   
-;;; Postconditions:
-;;;   
-;;;   
-;;;
-
-;;; Procedure:
-;;;   remove-danceability
-;;; Parameters:
-;;;   lis, a list in 
-;;; Purpose:
-;;;   Remove the danceability fild from all data in the given list 
-;;; Produces:
-;;;   newlis, a list
-;;; Preconditions:
-;;;   [No additonal]   
-;;; Postconditions:
-;;;   
-;;;   
-;;;
-
-;;; Procedure:
-;;;   split-data
-;;; Parameters:
-;;;   list
-;;;   limit
-;;; Purpose:
-;;;   purpose
-;;; Produces:
-;;;   product
-;;; Preconditions:
-;;;  
-;;;   
-;;; Postconditions:
-;;;   
-;;;   
-;;;
-
-;;; Procedure:
-;;;   weighted
-;;; Parameters:
-;;;   lst, a list
-;;;   weights, a vector
-;;; Purpose:
-;;;   takes a lst and returns the sum after multipling the weights
-;;;   by the values in the list and putting it together
-;;; Produces:
-;;;   result, a number 
-;;; Preconditions:
-;;;  
-;;;   
-;;; Postconditions:
-;;;   
-;;;   
-;;;
-
 (define data '((5 0.804 0.00479 0.56 0 0.164 0.11136666666666667 0.185 0.42511499999999997 0.264)
                (4 0.678 0.18 0.561 0.512 0.439 0.19413333333333332 0.0694 0.8700199999999999 0.904)
                (3 0.494 0.604 0.338 0.51 0.0922 0.25393333333333334 0.0261 0.43234 0.23)
@@ -113,6 +13,35 @@
 
 
 (define one-weights (vector 1 1 1 1 1 1 1 1))
+
+(define test-weights (list (vector 1 1 1 1 1 1 1 1)
+                           (vector 2 2 2 2 2 2 2 2)
+                           (vector 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3)
+                           (vector 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5)
+                           (vector 0.7 0.7 0.7 0.7 0.7 0.7 0.7 0.7)
+                           ))
+
+
+;;; Procedure:
+;;;   weighted
+;;; Parameters:
+;;;   lst, a list
+;;;   weights, a vector
+;;; Purpose:
+;;;   takes a lst and returns the sum after multipling the weights
+;;;   by the values in positions 2 - 9 of the list and summing the
+;;;   resulting values together
+;;; Produces:
+;;;   result, a number 
+;;; Preconditions:
+;;;  lst must be in the form (id danceability acousticness energy
+;;;  instrumentalness liveness loudness speechiness tempo valence)
+;;;  weights must be in the form of 8 elements each of a value between 0 and 1. 
+;;; Postconditions:
+;;;   if all elements in weights have a vector of 8 then weighted will return
+;;;   the sum of all the values in lst
+;;;   result <= (apply + (cddr lst))
+;;;   
 
 (define weighted
   (lambda (lst weights)
@@ -137,12 +66,14 @@
 ;;;   weights, a vector
 ;;; Purpose:
 ;;;   predicts the dancability of a song
-;;;   and return the difference
+;;;   and return the difference between prediction and
+;;;   true value
 ;;; Produces:
 ;;;   result, a non-negative number
 ;;; Preconditions:
-;;;  
-;;;   
+;;;  lst must be in the form (id danceability acousticness energy
+;;;  instrumentalness liveness loudness speechiness tempo valence)
+;;;  weights must be in the form of 8 elements each of a value between 0 and 1. 
 ;;; Postconditions:
 ;;;   
 ;;;   
@@ -151,6 +82,7 @@
 (define prediction-difference
   (lambda (lst weights)
     (abs (- (weighted lst weights) (cadr lst)))))
+
 
 (check-equal? (prediction-difference (car data) one-weights)
               0.9102716666666666
@@ -166,51 +98,74 @@
 ;;; Parameters:
 ;;;   data, a list of lists
 ;;;   weights, a vector
+;;;   length, number of elements in data
 ;;; Purpose:
 ;;;   predicts the dancability of every song in data 
 ;;;   and returns the average difference
 ;;; Produces:
 ;;;   result, a non-negative number
 ;;; Preconditions:
-;;;  
-;;;   
+;;;  data must be a list of lists in the form (id danceability acousticness energy
+;;;  instrumentalness liveness loudness speechiness tempo valence)
+;;;  weights must be in the form of 8 elements each of a value between 0 and 1. 
 ;;; Postconditions:
 ;;;   
 ;;;   
 ;;;
 
 (define average-prediction-difference
-  (lambda (data weights)
-    (/ (apply + (map (section prediction-difference <> weights) data))
-       ( increment (length data)))))
+  (lambda (data weights length)
+    (letrec ([helper (lambda (data weights)
+                       (if (null? data)
+                           0
+                           (+ (prediction-difference (car data) weights)
+                              (helper (cdr data) weights))))])
+      (/ (helper data weights) length))))
 
-(check-equal? (average-prediction-difference data one-weights)
-              ( - (/ (apply + (map (o (section apply + <>) (section cddr <>) ) data)) 6)
-                  (/ (apply + (map cadr data)) 6))
+(check-equal? (average-prediction-difference data one-weights (length data))
+              1.6149423333333333
               "average off")
 
 ;;; Procedure:
-;;;   optimize weights 
+;;;   optimize-weights 
 ;;; Parameters:
-;;;   weights, a list of lists
+;;;   weights, a list of vectors
 ;;;   data, a list of lists
 ;;; Purpose:
 ;;;   applies all possible weights in weights to data
 ;;;   and returnes the one which produces the least
 ;;;   average difference
 ;;; Produces:
-;;;   product
+;;;   result, a list of the optimum weight vector and the error at that weight
 ;;; Preconditions:
-;;;  
-;;;   
+;;;  data must be a list of lists in the form (id danceability acousticness energy
+;;;  instrumentalness liveness loudness speechiness tempo valence)
+;;;  weights must be a list of vectors in the form of 8 elements
+;;;  each of a value between 0 and 1.  
 ;;; Postconditions:
-;;;   
+;;;   (cadr result) is the lowest possible value that be provided by the weights given
 ;;;   
 ;;;
 
+(define optimize-weights
+  (lambda (weights data)
+    (let ([len (length data)])
+      (let kernell ([weights weights]
+                    [optimum-weight (car weights)]
+                    [optimum-error (average-prediction-difference data (car weights) len)])
+        (if (null? weights)
+            (list optimum-weight optimum-error) 
+            (let ([error (average-prediction-difference data (car weights) len)])
+              (cond 
+                [(< error optimum-error)
+                 (kernell (cdr weights)(car weights) error) ]
+                [else
+                 (kernell (cdr weights) optimum-weight optimum-error)]
+                )))))))
+
 
 ;;; Procedure:
-;;;   predict
+;;;   generate-weights
 ;;; Parameters:
 ;;;   parameters
 ;;; Purpose:
