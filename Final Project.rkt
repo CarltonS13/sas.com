@@ -11,12 +11,16 @@
                (1 0.743 0.199 0.359 0.00611 0.137 0.17335 0.0794 0.800415 0.588)
                (0 0.833 0.0102 0.434 0.0219 0.165 0.14658333333333334 0.431 0.75031 0.286)))
 
+(define data-practice (read-csv-file "/Users/carltonsegbefia/Documents/GitHub/sas.com/no-duplicates-reformated-practice.csv"))
+
 
 (define one-weights (vector 1 1 1 1 1 1 1 1))
 
 (define test-weights (list (vector 1 1 1 1 1 1 1 1)
                            (vector 2 2 2 2 2 2 2 2)
                            (vector 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3)
+                           (make-vector 8 0.1)
+                           (make-vector 8 0.07)
                            (vector 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5)
                            (vector 0.7 0.7 0.7 0.7 0.7 0.7 0.7 0.7)
                            ))
