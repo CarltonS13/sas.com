@@ -7,7 +7,6 @@
                        0
                        0
                        0
-                       0
                        0))
 
 
@@ -179,14 +178,13 @@
                 (cdr remaining)
                 (cons (cons (vector-ref cur 0)
                             (cons (vector-ref cur 2)
-                                  (cons (vector-ref cur 1)
                                         (cons (vector-ref cur 4)
                                               (cons (vector-ref cur 5)
                                                     (cons (vector-ref cur 7)
                                                           (cons (/ (vector-ref cur 8)  -60)
                                                                 (cons (vector-ref cur 10)
                                                                       (cons (/(vector-ref cur 11) 200)
-                                                                            (cons (vector-ref cur 13)  '()))))))))))
+                                                                            (cons (vector-ref cur 13)  '())))))))))
                       data-so-far)))]))))
 (define reformat-data-to-id--dance-name
   (lambda (lst)
@@ -249,7 +247,7 @@
           (if (null? remaining-practice)
               so-far
               (kernel (cdr remaining-practice) (cdr remaining-true)
-                      (cons (cons (dancebility weights (cddar remaining-practice))
+                      (cons (cons (dancebility weights (cdddar remaining-practice))
                                   (car remaining-true))
                             so-far))))))))
 
@@ -263,27 +261,29 @@
 
 (define increase-weight;increases weights based on the amount using overflowing values
   (lambda (amount)
-    (let kernel ([index 0])
-      (cond [(or (>= index (vector-length weight)))
+    (let kernel ([remaining amount]
+                 [index 0])
+      (cond [(or (= 0 remaining) (>= index (vector-length weight)))
              (vector->list weight)]
             [(> (+ amount (vector-ref weight index)) 1)
              (vector-set! weight index 0)
-             (kernel (increment index))]
+             (kernel (- amount (- 1 (vector-ref weight index))) (increment index))]
             [else
-             (vector-set! weight index (+ amount (vector-ref weight index)))]))))
+             (vector-set! weight index (+ amount (vector-ref weight index)))
+             (kernel 0 (increment index))]))))
 
 (define test-weights-algorithm;increases weights based on the amount using overflowing values (o (l-s = 1) (l-s apply +))
   (let ([last (- (vector-length weight) 1)])
     (lambda (amount)
-      (let ([limiter-last (- 1 (* 1 amount))]
-            [limiter-second-to (* 1 amount)])
+      (let ([limiter-last (- 1 (* 2 amount))]
+            [limiter-second-to (* 2 amount)])
         (let kernel ([best-so-far (cons (list 0 0 0 0 0 0 0 0) 1)])
           (increase-weight amount)
           ;           (display best-so-far)
           ;           (display "  ")
           ;           (display weight)
           ;           (newline)
-          (if ((o (r-s inbetween? 0) (l-s apply +)) (vector->list weight))
+          (if (and (> (vector-ref weight (- last 1)) limiter-second-to) (> (vector-ref weight last) limiter-last))
               best-so-far
               (let ([current-weight (vector->list weight)])
                 (if ((o (r-s inbetween? 1) (l-s apply +)) current-weight)
