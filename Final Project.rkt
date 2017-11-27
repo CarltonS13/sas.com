@@ -169,6 +169,42 @@
 
 
 ;;; Procedure:
+;;;   prediction-accuracy
+;;; Parameters:
+;;;   data, a list of lists
+;;;   weights, a vector
+;;;   deviance, a non-negative integer
+;;; Purpose:
+;;;   predicts the dancability of every song in data 
+;;;   and returns the average difference
+;;; Produces:
+;;;   result, a non-negative number
+;;; Preconditions:
+;;;  data must be a list of lists in the form (id danceability acousticness energy
+;;;  instrumentalness liveness loudness speechiness tempo valence)
+;;;  weights must be in the form of 8 elements each of a value between 0 and 1. 
+;;; Postconditions:
+;;;   
+;;;   
+;;;
+
+(define prediction-accuracy
+  (lambda (data weights deviance)
+    (letrec ([helper (lambda (data weights count)
+                       (cond [ (null? data)
+                               count]
+                             [ (<= (prediction-difference (car data) weights) deviance)
+                               (helper (cdr data) weights (increment count))]
+                             [else
+                                 (helper (cdr data) weights count)]))])
+      (helper data weights 0))))
+      
+
+(check-equal? (prediction-accuracy data-practice one-weights 10)
+              10
+              "average off")
+
+;;; Procedure:
 ;;;   generate-weights
 ;;; Parameters:
 ;;;   parameters

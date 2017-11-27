@@ -27,27 +27,27 @@
                (kernel (cdr remaining)
                        practice
                        (cons (car remaining) test))])))))
-;;;Procedure 
+;;; Procedure 
 ;;;   rand-string
-;;;Parameters 
+;;; Parameters 
 ;;;   range, a positive integer
-;;;Purpose 
+;;; Purpose 
 ;;;   Create a string out of a random number in range 0 (inclusive) - range (exclusive)
-;;;Produces 
+;;; Produces 
 ;;;   rand-string, a numeric string
 (define rand-string-num
   (lambda (range)
     (number->string (random range))))
 
-;;;Procedure 
+;;; Procedure 
 ;;;   list-of-lists-of-rands
-;;;Parameters
+;;; Parameters
 ;;;   count, a non-negative integer
 ;;;   sub-count, a non-negative integer
 ;;;   range, a positive integer
-;;;Purpose 
+;;; Purpose 
 ;;;   Create list of count lists out of sub-count random numeric strings in a range of 0 (inclusive) - range (exclusive)
-;;;Produces 
+;;; Produces 
 ;;;   result, a list of lists of strings
 (define list-of-lists-of-rands
   (lambda (count sub-count range)
@@ -59,14 +59,14 @@
         [else
          (kernel (decrement to-go) (cons (list-of-rands sub-count range) so-far))]))))
 
-;;;Procedure 
+;;; Procedure 
 ;;;   list-of-rands
-;;;Parameters
+;;; Parameters
 ;;;   count, a non-negative integer
 ;;;   range, a positive integer
-;;;Purpose 
+;;; Purpose 
 ;;;   Create list of count random numeric strings in a range of 0 (inclusive) - range (exclusive)
-;;;Produces 
+;;; Produces 
 ;;;   result, a list of strings
 (define list-of-rands
   (lambda (count range)
@@ -133,13 +133,13 @@
 
 ;(equal? '("Moore" "Emily" "emoore" "4205" "MAT" "Emeritus" "CSC")  '("Moore" "Tom" "tmoore" "0000" "Statistics" "Emeritus" "MAT"))
 
-;;;Procedure 
+;;; Procedure 
 ;;;   list->string2
-;;;Parameters
+;;; Parameters
 ;;;   lst, a list of strings
-;;;Purpose 
+;;; Purpose 
 ;;;  Append all elements of lst together into one string with § as seperator
-;;;Produces 
+;;; Produces 
 ;;;   result, a strings
 (define list->string2
   (lambda (lst)
@@ -154,19 +154,28 @@
               (kernel (cdr remaining) (string-append so-far " § " (car remaining)))
               (kernel (cdr remaining) (string-append so-far " § " (number->string (car remaining)))))))))
 
-;;;Procedure 
+;;; Procedure 
 ;;;   list-equal?
-;;;Parameters
+;;; Parameters
 ;;;   lst1, a list of strings
 ;;;   lst2, a list of strings
-;;;Purpose 
+;;; Purpose 
 ;;;  Compares lst1 and lst2 to see which one would be alphabetically first
-;;;Produces 
+;;; Produces 
 ;;;   result, a boolean value
 (define list-equal?
   (lambda (lst1 lst2)
     (string-ci>=? (list->string3 lst1) (list->string3 lst2))))
 
+;;; Procedure 
+;;;   reformat-data
+;;; Parameters
+;;;   lst, a list of lists
+;;; Purpose 
+;;;  Takes out the values at positions 3,6,9,12 in the lst and
+;;;  swaps the values at index positions 1 and 2 
+;;; Produces 
+;;;   result, a list of list 
 (define reformat-data
   (lambda (lst)
     (let kernel ([remaining lst]
@@ -188,6 +197,18 @@
                                                                       (cons (/(vector-ref cur 11) 200)
                                                                             (cons (vector-ref cur 13)  '()))))))))))
                       data-so-far)))]))))
+
+
+
+;;; Procedure 
+;;;   reformat-data-to-id--dance-name
+;;; Parameters
+;;;   lst, a list of lists
+;;; Purpose 
+;;;  Takes out the values at all index positions in the lst
+;;;  except those at index poistions 0, 2 ,15 
+;;; Produces 
+;;;   result, a list of list 
 (define reformat-data-to-id--dance-name
   (lambda (lst)
     (let kernel ([remaining lst]
@@ -203,6 +224,16 @@
                                   (cons (vector-ref cur 15) '())))
                       data-so-far)))]))))
 
+
+
+;;; Procedure 
+;;;   dump-data
+;;; Parameters
+;;;   lst, a list of lists
+;;; Purpose 
+;;;  writes data from list into a file 
+;;; Produces 
+;;;   result, a list of list 
 (define dump-data
   (lambda (filename list-of-data)
     (cond [(not (file-exists? filename))
@@ -223,6 +254,16 @@
           [else
            (delete-file filename)
            (dump-data filename list-of-data)])))
+
+
+;;; Procedure 
+;;;   get-all-true-dancibility
+;;; Parameters
+;;;   file, a file
+;;; Purpose 
+;;;   gets all danceability values in practice file
+;;; Produces 
+;;;   result, a list of list 
 (define get-all-true-dancibility
   (lambda (file)
     (let kernel ([remaining (read-csv-file file)]
@@ -234,10 +275,40 @@
 (define true-dancebility ;all dancebility values in practice file
   (get-all-true-dancibility "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates-reformated-practice.csv")) 
 
+
+;;; Procedure:
+;;;   dancebility
+;;; Parameters:
+;;;   data, a list
+;;;   weights, a vector
+;;; Purpose:
+;;;   takes a lst and returns the sum after multipling the weights
+;;;   by the values in positions 2 - 9 of the list and summing the
+;;;   resulting values together
+;;; Produces:
+;;;   result, a number 
+;;; Preconditions:
+;;;  lst must be in the form (id danceability acousticness energy
+;;;  instrumentalness liveness loudness speechiness tempo valence)
+;;;  weights must be in the form of 8 elements each of a value between 0 and 1. 
+;;; Postconditions:
+;;;   if all elements in weights are 1 then dancebility will return
+;;;   the sum of all the values in lst
+;;;   result <= (apply + (cddr lst))
+
 (define dancebility
   (lambda (weights data)
     (apply + (map * weights data))))
 
+
+;;; Procedure 
+;;;   get-practice-and-true-dance
+;;; Parameters
+;;;   weights, a vector of vectors
+;;; Purpose 
+;;;   puts predicted danceability and true danceability into a pair
+;;; Produces 
+;;;   result, a list of pairs
 ;takes in a vector for weights
 (define get-practice-and-true-dance;returns a list of pairs of the dancibility of a song based on the weights and the true dancibility
   (let ([data (read-csv-file "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates-reformated-practice.csv")])
@@ -261,6 +332,14 @@
   (lambda (test true)
     0.1))
 
+;;; Procedure 
+;;;   increase-weight
+;;; Parameters
+;;;   amount, a non-negative number
+;;; Purpose 
+;;;   increases weights based on the amount using overflowing values
+;;; Produces 
+;;;   [no result]
 (define increase-weight;increases weights based on the amount using overflowing values
   (lambda (amount)
     (let kernel ([index 0])
@@ -272,6 +351,14 @@
             [else
              (vector-set! weight index (+ amount (vector-ref weight index)))]))))
 
+;;; Procedure 
+;;;   test-weights-algorithm
+;;; Parameters
+;;;   amount, a non-negative number
+;;; Purpose 
+;;;   increases weights based on the amount using overflowing values (o (l-s = 1) (l-s apply +))
+;;; Produces 
+;;;   result, a list 
 (define test-weights-algorithm;increases weights based on the amount using overflowing values (o (l-s = 1) (l-s apply +))
   (let ([last (- (vector-length weight) 1)])
     (lambda (amount)
@@ -313,6 +400,14 @@
 ;                    [else
 ;                     (kernel (cons (increase-weight .1) so-far))])))))
 
+;;; Procedure 
+;;;   data-check-all-weights
+;;; Parameters
+;;;   all-weights, a list
+;;; Purpose 
+;;;   finds the average distance from the true dancibility of given weights
+;;; Produces 
+;;;   result, a list of vectors 
 (define data-check-all-weights; returns a list of weights and their average distance from the true dancibility
   (lambda (all-weights)
     (let kernel ([remaining all-weights]
@@ -324,14 +419,39 @@
                                                  (list (average-inbounds (get-practice-and-true-dance (car remaining)))))
                                            so-far))]))))
 
+;;; Procedure 
+;;;   average-inbounds
+;;; Parameters
+;;;   lst, a list
+;;; Purpose 
+;;;   finds the average distance from the true dancibility of given weights
+;;; Produces 
+;;;   result, a list 
 (define average-inbounds
   (lambda (lst)
     (/ (reduce + (map distance lst)) (length lst))))
 
+;;; Procedure 
+;;;   inbetween?
+;;; Parameters
+;;;   testscore, 
+;;;   truescore,  
+;;; Purpose 
+;;;   
+;;; Produces 
+;;;   result, a boolean
 (define inbetween?
   (lambda (testscore truescore)
     (and (< testscore (+ truescore 0.002)) (> testscore (- truescore 0.002)))))
 
+;;; Procedure 
+;;;   distance
+;;; Parameters
+;;;   pair, a pair
+;;; Purpose 
+;;;   finds the difference between the predicted dancability and the true danceability
+;;; Produces 
+;;;   result, a number
 (define distance
   (lambda (pair)
     (abs (- (car pair) (cdr pair)))))
