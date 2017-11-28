@@ -128,6 +128,11 @@
           [else 
            (kernel left (cons cur sum-so-far))])))))
 
+;(define ls< (o (section string-ci<? <>) (section cadr <>))
+;(sort la
+;      #:key cadr string<?)
+
+;(equal? '("Moore" "Emily" "emoore" "4205" "MAT" "Emeritus" "CSC")  '("Moore" "Tom" "tmoore" "0000" "Statistics" "Emeritus" "MAT"))
 
 ;;;Procedure 
 ;;;   list->string3
@@ -163,18 +168,6 @@
   (lambda (lst1 lst2)
     (string-ci>=? (list->string3 lst1) (list->string3 lst2))))
 
-
-
-
-;;; Procedure 
-;;;   reformat-data
-;;; Parameters
-;;;   lst, a list of lists
-;;; Purpose 
-;;;  Takes out the values at index positions 3,6,9,12 in the lst and
-;;;  swaps the values at index positions 1 and 2 
-;;; Produces 
-;;;  result, a list of list 
 (define reformat-data
   (lambda (lst)
     (let kernel ([remaining lst]
