@@ -28,7 +28,7 @@
                (kernel (cdr remaining)
                        practice
                        (cons (car remaining) test))])))))
-;;;Procedure 
+;;; Procedure 
 ;;;   rand-string
 ;;;Parameters 
 ;;;   range, a positive integer
@@ -40,15 +40,15 @@
   (lambda (range)
     (number->string (random range))))
 
-;;;Procedure 
+;;; Procedure 
 ;;;   list-of-lists-of-rands
-;;;Parameters
+;;; Parameters
 ;;;   count, a non-negative integer
 ;;;   sub-count, a non-negative integer
 ;;;   range, a positive integer
-;;;Purpose 
+;;; Purpose 
 ;;;   Create list of count lists out of sub-count random numeric strings in a range of 0 (inclusive) - range (exclusive)
-;;;Produces 
+;;; Produces 
 ;;;   result, a list of lists of strings
 (define list-of-lists-of-rands
   (lambda (count sub-count range)
@@ -60,14 +60,14 @@
         [else
          (kernel (decrement to-go) (cons (list-of-rands sub-count range) so-far))]))))
 
-;;;Procedure 
+;;; Procedure 
 ;;;   list-of-rands
-;;;Parameters
+;;; Parameters
 ;;;   count, a non-negative integer
 ;;;   range, a positive integer
-;;;Purpose 
+;;; Purpose 
 ;;;   Create list of count random numeric strings in a range of 0 (inclusive) - range (exclusive)
-;;;Produces 
+;;; Produces 
 ;;;   result, a list of strings
 (define list-of-rands
   (lambda (count range)
@@ -129,13 +129,13 @@
            (kernel left (cons cur sum-so-far))])))))
 
 
-;;;Procedure 
+;;; Procedure 
 ;;;   list->string3
-;;;Parameters
+;;; Parameters
 ;;;   lst, a list of strings
-;;;Purpose 
+;;; Purpose 
 ;;;  Append all elements of lst together into one string with § as seperator
-;;;Produces 
+;;; Produces 
 ;;;   result, a strings
 (define list->string2
   (lambda (lst)
@@ -150,14 +150,14 @@
               (kernel (cdr remaining) (string-append so-far " § " (car remaining)))
               (kernel (cdr remaining) (string-append so-far " § " (number->string (car remaining)))))))))
 
-;;;Procedure 
+;;; Procedure 
 ;;;   list-equal?
-;;;Parameters
+;;; Parameters
 ;;;   lst1, a list of strings
 ;;;   lst2, a list of strings
-;;;Purpose 
+;;; Purpose 
 ;;;  Compares lst1 and lst2 to see which one would be alphabetically first
-;;;Produces 
+;;; Produces 
 ;;;   result, a boolean value
 (define list-equal?
   (lambda (lst1 lst2)
@@ -212,14 +212,14 @@
                                   (cons (vector-ref cur 15) '())))
                       data-so-far)))]))))
 
-;;;Procedure 
+;;; Procedure 
 ;;;   dump-data
-;;;Parameters 
+;;; Parameters 
 ;;;   filename, a string
 ;;;   list-of-data, a list of lists
-;;;Purpose 
+;;; Purpose 
 ;;;   Writes every list in list-of-data into the file filename in a cvs format
-;;;Produces 
+;;; Produces 
 ;;;   [No Output]
 (define dump-data
   (lambda (filename list-of-data)
@@ -286,15 +286,15 @@
 (define get-practice-and-true-dance;
   (let ([data (read-csv-file "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates-reformated-practice.csv")])
     (lambda (weights)
-        (let kernel ([remaining-practice data]
-                     [remaining-true true-dancebility-practice]
-                     [so-far null])
-          (if (null? remaining-practice)
-              so-far
-              (kernel (cdr remaining-practice) (cdr remaining-true)
-                      (cons (cons (dancebility weights (cons (list-ref (car remaining-practice) 2) (cons (list-ref (car remaining-practice) 3) (drop (car remaining-practice) 8))))
-                                  (car remaining-true))
-                            so-far)))))))
+      (let kernel ([remaining-practice data]
+                   [remaining-true true-dancebility-practice]
+                   [so-far null])
+        (if (null? remaining-practice)
+            so-far
+            (kernel (cdr remaining-practice) (cdr remaining-true)
+                    (cons (cons (dancebility weights (cons (list-ref (car remaining-practice) 2) (cons (list-ref (car remaining-practice) 3) (drop (car remaining-practice) 8))))
+                                (car remaining-true))
+                          so-far)))))))
 
 ;;; Procedure 
 ;;;   increase-weight
