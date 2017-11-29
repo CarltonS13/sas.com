@@ -383,7 +383,7 @@
 ;;;   testscore, 
 ;;;   truescore,  
 ;;; Purpose 
-;;;   
+;;;   it checks if testscore is within a diviance of 0.000002
 ;;; Produces 
 ;;;   result, a boolean
 (define inbetween?
