@@ -3,14 +3,14 @@
 
 (define weight (vector -1 -1 -1))
 
-;;;Procedure 
+;;; Procedure 
 ;;;   split-data
-;;;Parameters 
+;;; Parameters 
 ;;;   lst, a list
-;;;Purpose 
+;;; Purpose 
 ;;;   Splits lst into a pair of lists with the car containing 2/3 of lst's elements randomly selected
 ;;;   and the cdr containing the remaining 1/3
-;;;Produces 
+;;; Produces 
 ;;;   split, a pair of lists
 (define split-data
   (lambda (lst)
@@ -30,11 +30,11 @@
                        (cons (car remaining) test))])))))
 ;;; Procedure 
 ;;;   rand-string
-;;;Parameters 
+;;; Parameters 
 ;;;   range, a positive integer
-;;;Purpose 
+;;; Purpose 
 ;;;   Create a string out of a random number in range 0 (inclusive) - range (exclusive)
-;;;Produces 
+;;; Produces 
 ;;;   rand-string, a numeric string
 (define rand-string-num
   (lambda (range)
@@ -128,10 +128,6 @@
           [else 
            (kernel left (cons cur sum-so-far))])))))
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 1af671631c3c9c8ec6c71dccef553f1c3fea7c12
 
 ;;; Procedure 
 ;;;   list->string3
@@ -246,13 +242,13 @@
            (delete-file filename)
            (dump-data filename list-of-data)])))
 
-;;;Procedure 
+;;; Procedure 
 ;;;   get-all-true-dancibility
-;;;Parameters 
+;;; Parameters 
 ;;;   file, a string leading to a file in cvs format and formatted by reformat
-;;;Purpose 
+;;; Purpose 
 ;;;   Returns a list of all dancibility values from the data in file
-;;;Produces 
+;;; Produces 
 ;;;   all-dance, a list of floats
 (define get-all-true-dancibility
   (lambda (file)
@@ -265,42 +261,31 @@
 (define true-dancebility-practice ;all dancebility values in practice file
   (get-all-true-dancibility "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates-reformated-practice.csv")) 
 
-;;;Procedure 
+;;; Procedure 
 ;;;   dancibility
-;;;Parameters 
+;;; Parameters 
 ;;;   weights, a list of weights
 ;;;   data, a list of data values
-;;;Purpose 
+;;; Purpose 
 ;;;   Returns a list of all dancibility values from the data in file
-;;;Produces 
+;;; Produces 
 ;;;   all-dance, a list of floats
 (define dancebility
   (lambda (weights data)
     (apply + (map * weights data))))
 
-;;;Procedure 
+;;; Procedure 
 ;;;   dancibility
-;;;Parameters 
+;;; Parameters 
 ;;;   weights, a list of weights
 ;;;   data, a list of data values
-;;;Purpose 
+;;; Purpose 
 ;;;   returns a list of pairs of the dancibility of a song based on the weights and the true dancibility
-;;;Produces 
+;;; Produces 
 ;;;   practice-and-true-dance, a list of pairs of calculated dancibility and the value from the practice data
 (define get-practice-and-true-dance;
   (let ([data (read-csv-file "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates-reformated-practice.csv")])
     (lambda (weights)
-<<<<<<< HEAD
-      (let kernel ([remaining-practice data]
-                   [remaining-true true-dancebility-practice]
-                   [so-far null])
-        (if (null? remaining-practice)
-            so-far
-            (kernel (cdr remaining-practice) (cdr remaining-true)
-                    (cons (cons (dancebility weights (cons (list-ref (car remaining-practice) 2) (cons (list-ref (car remaining-practice) 3) (drop (car remaining-practice) 8))))
-                                (car remaining-true))
-                          so-far)))))))
-=======
         (let kernel ([remaining-practice data]
                      [remaining-true true-dancebility-practice]
                      [so-far null])
@@ -310,7 +295,6 @@
                       (cons (cons (dancebility weights  (cons (list-ref (car remaining-practice) 3) (drop (car remaining-practice) 8)))
                                   (car remaining-true))
                             so-far)))))))
->>>>>>> bfdf80ff159ec304d42910adc2beefa8c1b90907
 
 ;;; Procedure 
 ;;;   increase-weight
@@ -419,17 +403,3 @@
     (abs (- (car pair) (cdr pair)))))
 
 
-;(dump-data "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates.csv"
-;           (filter-duplicates (cdr (read-csv-file "C:/Users/Moriz/Documents/GitHub/sas.com/2000data.csv"))))
-;(dump-data "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates-reformated-to-id-dance-name.csv"
-;           (reformat-data-to-id--dance-name (read-csv-file "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates.csv")))
-;(dump-data "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates-reformated.csv"
-;           (reformat-data (read-csv-file "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates.csv")))
-
-;(define split (split-data (read-csv-file "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates-reformated.csv")))
-
-;(dump-data "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates-reformated-practice.csv"
-;           (car split))
-;(dump-data "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates-reformated-test.csv"
-;           (cdr split))
-;(lambda (one two) (< (cadr one) (cadr two)))
