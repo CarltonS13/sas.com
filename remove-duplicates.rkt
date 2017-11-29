@@ -476,3 +476,28 @@
 ;(data-check-all-weights '((0 0.2 0 0 0 0 0.425 0.375)))
 ;(data-check-all-weights '((0 0.21 0 0 0 0 0.4155 0.3745)))
 ;(data-check-all-weights '((0 0.22 0 0 0 0 0.4155 0.3645)))
+
+;;; Procedure:
+;;;   final-dancibility-algorithm
+;;; Parameters:
+;;;   data, a list
+;;; Purpose:
+;;;   Take data from a song from Spotify and calculate its dancibility
+;;; Produces:
+;;;   dancibility, a number 
+;;; Preconditions:
+;;;  data must be in the form (id acousticness danceability duration_ms energy
+;;;  instrumentalness key liveness loudness mode speechiness tempo time_signature
+;;;  valence target song_title artist)
+;;; Postconditions:
+;;;   0 <= dancibility <= 1
+(define final-dancibility-algorithm
+  (let ([weights (vector 0.22 0.4155 0.3645)])
+    (lambda (data)
+      (cond [(list? data)
+             (error "Data needs to be a list, given: ")]
+            [else
+      (let ([vector-data (list->vector data)])
+        (+ (* (vector-ref vector-data 4) (vector-ref weights 1))
+           (* (vector-ref vector-data 11) (vector-ref weights 2))
+           (* (vector-ref vector-data 13) (vector-ref weights 3))))]))))

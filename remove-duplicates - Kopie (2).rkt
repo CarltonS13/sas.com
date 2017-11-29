@@ -1,7 +1,7 @@
 #lang racket
 (require csc151)
 
-(define weight (vector -1 -1 -1 -1))
+(define weight (vector -1 -1 -1))
 
 ;;;Procedure 
 ;;;   split-data
@@ -128,11 +128,7 @@
           [else 
            (kernel left (cons cur sum-so-far))])))))
 
-;(define ls< (o (section string-ci<? <>) (section cadr <>))
-;(sort la
-;      #:key cadr string<?)
 
-;(equal? '("Moore" "Emily" "emoore" "4205" "MAT" "Emeritus" "CSC")  '("Moore" "Tom" "tmoore" "0000" "Statistics" "Emeritus" "MAT"))
 
 ;;;Procedure 
 ;;;   list->string3
@@ -285,7 +281,7 @@
           (if (null? remaining-practice)
               so-far
               (kernel (cdr remaining-practice) (cdr remaining-true)
-                      (cons (cons (dancebility weights (cons (list-ref (car remaining-practice) 2) (cons (list-ref (car remaining-practice) 3) (drop (car remaining-practice) 8))))
+                      (cons (cons (dancebility weights  (cons (list-ref (car remaining-practice) 3) (drop (car remaining-practice) 8)))
                                   (car remaining-true))
                             so-far)))))))
 
@@ -316,7 +312,7 @@
           ;           (display "  ")
           ;           (display weight)
           ;           (newline)
-          (if ((o (r-s inbetween? -4) (l-s apply +)) (vector->list weight))
+          (if ((o (r-s inbetween? -3) (l-s apply +)) (vector->list weight))
               best-so-far
               (let ([current-weight (vector->list weight)])
                 (if ((o (r-s inbetween? 1) (l-s apply +)) current-weight)
