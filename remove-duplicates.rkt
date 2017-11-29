@@ -486,9 +486,25 @@
 ;;; Produces:
 ;;;   dancibility, a number 
 ;;; Preconditions:
-;;;  data must be in the form (id acousticness danceability duration_ms energy
-;;;  instrumentalness key liveness loudness mode speechiness tempo time_signature
-;;;  valence target song_title artist)
+;;;  data must be in the form:
+;;;     Name (Spotify)    Type      Range
+;;;     id                integer   0-INTEGER_MAX_VALUE
+;;;     acousticness      float     0-1
+;;;     danceability      float     0-1
+;;;     duration_ms       integer   1-INTEGER_MAX_VALUE
+;;;     energy            float     0-1
+;;;     instrumentalness  float     0-1
+;;;     key               integer   0-11
+;;;     liveness          float     0-1
+;;;     loudness          float     -60 - 0
+;;;     mode              integer   0-1
+;;;     speechiness       float     0-1
+;;;     tempo             float     0-200
+;;;     time_signature    integer   1-8
+;;;     valence           float     0-1
+;;;     target            integer   0-1
+;;;     song_title        string    n/A
+;;;     artist            string    n/A
 ;;; Postconditions:
 ;;;   0 <= dancibility <= 1
 (define final-dancibility-algorithm

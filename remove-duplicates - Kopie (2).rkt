@@ -2,6 +2,7 @@
 (require csc151)
 
 (define weight (vector -1 -1 -1))
+(define global-path "C:/Users/Moriz/Documents/GitHub/sas.com/")
 
 ;;; Procedure 
 ;;;   split-data
@@ -253,7 +254,7 @@
           (kernel (cdr remaining) (cons (cadar remaining) so-far))))))
 
 (define true-dancebility-practice ;all dancebility values in practice file
-  (get-all-true-dancibility "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates-reformated-practice.csv")) 
+  (get-all-true-dancibility (string-append global-path "no-duplicates-reformated-practice.csv"))) 
 
 ;;; Procedure 
 ;;;   dancibility
@@ -278,7 +279,7 @@
 ;;; Produces 
 ;;;   practice-and-true-dance, a list of pairs of calculated dancibility and the value from the practice data
 (define get-practice-and-true-dance;
-  (let ([data (read-csv-file "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates-reformated-practice.csv")])
+  (let ([data (read-csv-file (string-append global-path "no-duplicates-reformated-practice.csv"))])
     (lambda (weights)
         (let kernel ([remaining-practice data]
                      [remaining-true true-dancebility-practice]
@@ -298,7 +299,7 @@
 ;;;   increases weights based on the amount using overflowing values
 ;;; Produces 
 ;;;   [no result]
-(define increase-weight;increases weights based on the amount using overflowing values
+(define increase-weight
   (lambda (amount)
     (let kernel ([index 0])
       (cond [(or (>= index (vector-length weight)))
@@ -324,10 +325,6 @@
             [limiter-second-to (* 1 amount)])
         (let kernel ([best-so-far (cons (list 0 0 0 0 0 0 0 0) 1)])
           (increase-weight amount)
-          ;           (display best-so-far)
-          ;           (display "  ")
-          ;           (display weight)
-          ;           (newline)
           (if ((o (r-s inbetween? -3) (l-s apply +)) (vector->list weight))
               best-so-far
               (let ([current-weight (vector->list weight)])
@@ -396,4 +393,43 @@
   (lambda (pair)
     (abs (- (car pair) (cdr pair)))))
 
-
+;;; Procedure:
+;;;   final-dancibility-algorithm
+;;; Parameters:
+;;;   data, a list
+;;; Purpose:
+;;;   Take data from a song from Spotify and calculate its dancibility
+;;; Produces:
+;;;   dancibility, a number 
+;;; Preconditions:
+;;;  data must be in the form:
+;;;     Name (Spotify)    Type      Range
+;;;     id                integer   0-INTEGER_MAX_VALUE
+;;;     acousticness      float     0-1
+;;;     danceability      float     0-1
+;;;     duration_ms       integer   1-INTEGER_MAX_VALUE
+;;;     energy            float     0-1
+;;;     instrumentalness  float     0-1
+;;;     key               integer   0-11
+;;;     liveness          float     0-1
+;;;     loudness          float     -60 - 0
+;;;     mode              integer   0-1
+;;;     speechiness       float     0-1
+;;;     tempo             float     0-200
+;;;     time_signature    integer   1-8
+;;;     valence           float     0-1
+;;;     target            integer   0-1
+;;;     song_title        string    n/A
+;;;     artist            string    n/A
+;;; Postconditions:
+;;;   0 <= dancibility <= 1
+(define final-dancibility-algorithm
+  (let ([weights (vector 0.22 0.4155 0.3645)])
+    (lambda (data)
+      (cond [(not (list? data))
+             (error "Data needs to be a list, given: ")]
+            [else
+      (let ([vector-data (list->vector data)])
+        (+ (*(vector-ref vector-data 4) (vector-ref weights 0))
+           (* (/ (vector-ref vector-data 11) 200) (vector-ref weights 1))
+           (* (vector-ref vector-data 13) (vector-ref weights 2))))]))))
