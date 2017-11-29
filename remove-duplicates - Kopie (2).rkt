@@ -130,16 +130,25 @@
 
 
 ;;; Procedure 
-;;;   list->string3
+;;;   list->string2
 ;;; Parameters
 ;;;   lst, a list of strings
 ;;; Purpose 
-;;;  Append all elements of lst together into one string with § as seperator
+;;;   Append all elements of lst together into one string
 ;;; Produces 
 ;;;   result, a strings
 (define list->string2
   (lambda (lst)
     (apply string-append lst)))
+
+;;; Procedure 
+;;;   list->string3
+;;; Parameters
+;;;   lst, a list of strings/integers
+;;; Purpose 
+;;;  Append all elements of lst together into one string with § as seperator
+;;; Produces 
+;;;   result, a strings
 (define list->string3
   (lambda (lst)
     (let kernel ([remaining (cdr lst)]
@@ -195,21 +204,6 @@
                                                                 (cons (vector-ref cur 10)
                                                                       (cons (/(vector-ref cur 11) 200)
                                                                             (cons (vector-ref cur 13)  '()))))))))))
-                      data-so-far)))]))))
-
-(define reformat-data-to-id--dance-name
-  (lambda (lst)
-    (let kernel ([remaining lst]
-                 [data-so-far '()])
-      (cond [(null? remaining)
-             data-so-far]
-            [else
-             (let ([cur (list->vector (car remaining))])
-               (kernel
-                (cdr remaining)
-                (cons (cons (vector-ref cur 0)
-                            (cons (vector-ref cur 2)
-                                  (cons (vector-ref cur 15) '())))
                       data-so-far)))]))))
 
 ;;; Procedure 
