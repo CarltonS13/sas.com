@@ -1,7 +1,7 @@
 #lang racket
 (require csc151)
 
-(define weight (vector -1 -1 -1 -1))
+(define weight (vector -1 -1 -1))
 
 ;;;Procedure 
 ;;;   split-data
@@ -128,6 +128,10 @@
           [else 
            (kernel left (cons cur sum-so-far))])))))
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> 1af671631c3c9c8ec6c71dccef553f1c3fea7c12
 
 ;;; Procedure 
 ;;;   list->string3
@@ -286,6 +290,7 @@
 (define get-practice-and-true-dance;
   (let ([data (read-csv-file "C:/Users/Moriz/Documents/GitHub/sas.com/no-duplicates-reformated-practice.csv")])
     (lambda (weights)
+<<<<<<< HEAD
       (let kernel ([remaining-practice data]
                    [remaining-true true-dancebility-practice]
                    [so-far null])
@@ -295,6 +300,17 @@
                     (cons (cons (dancebility weights (cons (list-ref (car remaining-practice) 2) (cons (list-ref (car remaining-practice) 3) (drop (car remaining-practice) 8))))
                                 (car remaining-true))
                           so-far)))))))
+=======
+        (let kernel ([remaining-practice data]
+                     [remaining-true true-dancebility-practice]
+                     [so-far null])
+          (if (null? remaining-practice)
+              so-far
+              (kernel (cdr remaining-practice) (cdr remaining-true)
+                      (cons (cons (dancebility weights  (cons (list-ref (car remaining-practice) 3) (drop (car remaining-practice) 8)))
+                                  (car remaining-true))
+                            so-far)))))))
+>>>>>>> bfdf80ff159ec304d42910adc2beefa8c1b90907
 
 ;;; Procedure 
 ;;;   increase-weight
@@ -334,7 +350,7 @@
           ;           (display "  ")
           ;           (display weight)
           ;           (newline)
-          (if ((o (r-s inbetween? -4) (l-s apply +)) (vector->list weight))
+          (if ((o (r-s inbetween? -3) (l-s apply +)) (vector->list weight))
               best-so-far
               (let ([current-weight (vector->list weight)])
                 (if ((o (r-s inbetween? 1) (l-s apply +)) current-weight)
