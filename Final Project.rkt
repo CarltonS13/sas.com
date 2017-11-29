@@ -12,6 +12,7 @@
                (0 0.833 0.0102 0.434 0.0219 0.165 0.14658333333333334 0.431 0.75031 0.286)))
 
 (define data-practice (read-csv-file "/Users/carltonsegbefia/Documents/GitHub/sas.com/no-duplicates-reformated-practice.csv"))
+(define data-test (read-csv-file "/Users/carltonsegbefia/Documents/GitHub/sas.com/no-duplicates-reformated-test.csv"))
 
 
 (define one-weights (vector 1 1 1 1 1 1 1 1))
@@ -189,15 +190,15 @@
 ;;;
 
 (define prediction-accuracy
-  (lambda (data weights deviance)
+  (lambda (main-data weights deviance)
     (letrec ([helper (lambda (data weights count)
                        (cond [ (null? data)
-                               count]
+                               (list count deviance (* (/ count (length main-data)) 100) (* (/ deviance 1) 100))]
                              [ (<= (prediction-difference (car data) weights) deviance)
                                (helper (cdr data) weights (increment count))]
                              [else
                                  (helper (cdr data) weights count)]))])
-      (helper data weights 0))))
+      (helper main-data weights 0))))
       
 
 (check-equal? (prediction-accuracy data-practice one-weights 10)

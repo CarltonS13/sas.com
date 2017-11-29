@@ -296,11 +296,14 @@
                                   (car remaining-true))
                             so-far)))))))
 
-;(define test-and-true-dance;no point so far
-;  (get-practice-and-true-dance
-;   weight))
-
-
+;;; Procedure 
+;;;   increase-weight
+;;; Parameters
+;;;   amount, a non-negative number
+;;; Purpose 
+;;;   increases weights based on the amount using overflowing values
+;;; Produces 
+;;;   [no result]
 (define increase-weight;increases weights based on the amount using overflowing values
   (lambda (amount)
     (let kernel ([index 0])
@@ -312,6 +315,14 @@
             [else
              (vector-set! weight index (+ amount (vector-ref weight index)))]))))
 
+;;; Procedure 
+;;;   test-weights-algorithm
+;;; Parameters
+;;;   amount, a non-negative number
+;;; Purpose 
+;;;   increases weights based on the amount using overflowing values (o (l-s = 1) (l-s apply +))
+;;; Produces 
+;;;   result, a list 
 (define test-weights-algorithm;increases weights based on the amount using overflowing values (o (l-s = 1) (l-s apply +))
   (let ([last (- (vector-length weight) 1)])
     (lambda (amount)
@@ -335,23 +346,14 @@
                     (kernel best-so-far)))))))))
             
 
-;(define all-weights-.2steps ;all weights with .2 step differences that sum up to 1
-;  (filter (o (l-s = 1) (l-s apply +))
-;          (let ([last (- (vector-length weight) 1)])
-;            (let kernel ([so-far null])
-;              (cond [(> (vector-ref weight last) .8) 
-;                     so-far]
-;                    [else
-;                     (kernel (cons (increase-weight .2) so-far))])))))
-
-;(define all-weights-.1steps ;all weights with .2 step differences that sum up to 1
-;  (filter (o (l-s = 1) (l-s apply +))
-;          (let ([last (- (vector-length weight) 1)])
-;            (let kernel ([so-far null])
-;              (cond [(> (vector-ref weight last) .9) 
-;                     so-far]
-;                    [else
-;                     (kernel (cons (increase-weight .1) so-far))])))))
+;;; Procedure 
+;;;   data-check-all-weights
+;;; Parameters
+;;;   all-weights, a list
+;;; Purpose 
+;;;   finds the average distance from the true dancibility of given weights
+;;; Produces 
+;;;   result, a list of vectors
 
 (define data-check-all-weights; returns a list of weights and their average distance from the true dancibility
   (lambda (all-weights)
@@ -363,15 +365,39 @@
              (kernel (cdr remaining) (cons (cons (car remaining)
                                                  (list (average-inbounds (get-practice-and-true-dance (car remaining)))))
                                            so-far))]))))
-
+;;; Procedure 
+;;;   average-inbounds
+;;; Parameters
+;;;   lst, a list
+;;; Purpose 
+;;;   finds the average distance from the true dancibility of given weights
+;;; Produces 
+;;;   result, a list
 (define average-inbounds
   (lambda (lst)
     (/ (reduce + (map distance lst)) (length lst))))
 
+;;; Procedure 
+;;;   inbetween?
+;;; Parameters
+;;;   testscore, 
+;;;   truescore,  
+;;; Purpose 
+;;;   
+;;; Produces 
+;;;   result, a boolean
 (define inbetween?
   (lambda (testscore truescore)
     (and (< testscore (+ truescore 0.000002)) (> testscore (- truescore 0.000002)))))
 
+;;; Procedure 
+;;;   distance
+;;; Parameters
+;;;   pair, a pair
+;;; Purpose 
+;;;   finds the difference between the predicted dancability and the true danceability
+;;; Produces 
+;;;   result, a number
 (define distance
   (lambda (pair)
     (abs (- (car pair) (cdr pair)))))
